@@ -1,0 +1,5 @@
+bleson
+prometheus-client
+pyyaml
+paho-mqtt
+pymemcache

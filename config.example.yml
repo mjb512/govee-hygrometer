@@ -1,0 +1,24 @@
+collector:
+  logging: INFO
+  # anything other than 'active' results in no prom data
+  mode: 'active'
+  site: 'My Home'
+
+  mqtt:
+    enable: yes
+    server: mqtt.local
+    port: 1883
+    publish_topic: govee-hygrometers/readings
+
+  memcache:
+    enable: yes
+    server: memcached.local
+    port: 1234
+
+govees:
+  'GVH5075_11AA':
+    name: 'Living Room'
+  'GVH5075_22BB':
+    name: 'Bathroom'
+  'GVH5075_33CC':
+    name: 'Garage'

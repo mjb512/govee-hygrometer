@@ -1,0 +1,31 @@
+#version: "3"
+
+services:
+    bt-hygrometer:
+        build:
+            context: https://github.com/mjb512/govee-hygrometer.git#main
+            dockerfile_inline: |
+                FROM python:3
+                WORKDIR /app
+
+                COPY requirements.txt ./
+                RUN pip install --no-cache-dir -r requirements.txt
+                # https://github.com/Adam-Langley/pybleno/issues/63
+                RUN sed -i 's/struct.pack("<LLLH"/struct.pack("<LLLHxx"/' /usr/local/lib/python3*/site-packages/bleson/providers/linux/linux_adapter.py
+
+                COPY . .
+                CMD [ "python3", "./main.py" ]
+ 
+        #image: mjb512/govee-hygrometer:latest
+        container_name: govee-hygrometer
+        ports:
+            - 38256:38256
+        # need for bluetooth access
+        network_mode: "host"
+        privileged: true
+
+        restart: always
+        volumes:
+            - ./config.yml:/config.yml:ro
+        environment:
+            - CONFIG_FILE=/config.yml

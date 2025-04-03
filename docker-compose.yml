@@ -8,12 +8,12 @@ services:
                 FROM python:3
                 WORKDIR /app
 
-                COPY requirements.txt ./
+                COPY src/requirements.txt ./
                 RUN pip install --no-cache-dir -r requirements.txt
                 # https://github.com/Adam-Langley/pybleno/issues/63
                 RUN sed -i 's/struct.pack("<LLLH"/struct.pack("<LLLHxx"/' /usr/local/lib/python3*/site-packages/bleson/providers/linux/linux_adapter.py
 
-                COPY . .
+                COPY src/ .
                 CMD [ "python3", "./main.py" ]
  
         #image: mjb512/govee-hygrometer:latest

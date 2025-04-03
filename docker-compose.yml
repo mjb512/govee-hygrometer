@@ -18,8 +18,7 @@ services:
  
         #image: mjb512/govee-hygrometer:latest
         container_name: govee-hygrometer
-        ports:
-            - 38256:38256
+
         # need for bluetooth access
         network_mode: "host"
         privileged: true

@@ -140,6 +140,7 @@ class Collector:
             if self.memcache_enabled:
                 self.memcache.set(f"govee_hygrometers_{a.name}", json.dumps(payload))
                 self.memcache.set(f"govee_hygrometers_rssi_{a.name}_{self.hostname}", payload['rssi'])
+                self.memcache.set(f"govee_hygrometers_receiver_heartbeats_{self.hostname}", time.time())
 
                 known_receivers = json.loads(self.memcache.get("govee_hygrometers_receivers") or "[]")
                 if self.hostname not in known_receivers:

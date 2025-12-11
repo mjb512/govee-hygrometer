@@ -1,7 +1,7 @@
 #version: "3"
 
 services:
-    bt-hygrometer:
+    govee-hygrometer:
         build:
             context: https://github.com/mjb512/govee-hygrometer.git#main
             dockerfile_inline: |

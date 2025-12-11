@@ -16,6 +16,7 @@ from prometheus_client import start_http_server, Summary, Counter, Gauge
 import paho.mqtt.client as mqtt
 from pymemcache.client.base import PooledClient as MemcacheClient
 
+VERSION = "1.3"
 
 G_TEMP = Gauge('govee_temperature', 'Reported temperature', ['address', 'name'])
 G_HUMI = Gauge('govee_humidity', 'Reported relative humidity', ['address', 'name'])
@@ -26,6 +27,7 @@ G_RSSI = Gauge('govee_rssi', 'Reported RSSI', ['address', 'name', 'receiver'])
 class Collector:
     def __init__(self, config_file):
         self.log = logging.getLogger(__name__)
+        self.log.info(f'Version {VERSION}')
         self.log.info('Loading config.')
         self.load_conf(config_file)
         self.log.level = logging.__dict__[self.config['logging']]
@@ -93,6 +95,10 @@ class Collector:
             return
         name = self.govees[a.name]['name']
 
+        trv_id = None
+        if 'trv_id' in self.govees[a.name]:
+            trv_id = self.govees[a.name]['trv_id']
+
         #hexdump.hexdump(a.mfg_data)
         packet = int(hex_string(a.mfg_data[3:6]).replace(" ", ""), 16)
 
@@ -112,7 +118,7 @@ class Collector:
             G_BATT.labels(a.address.address, name).set(battery)
             G_RSSI.labels(a.address.address, name, self.hostname).set(a.rssi)
             payload = {
-                'version': "1.2",
+                'version': VERSION,
                 'ts': time.time(),
                 'battery': battery,
                 'ble_address': a.address.address,
@@ -123,6 +129,7 @@ class Collector:
                 'rssi': a.rssi,
                 'received_by': gethostname(),
                 'temperature': temperature,
+                'trv_id': trv_id
             }
 
             # dupes shouldn't matter

@@ -18,6 +18,7 @@ collector:
 govees:
   'GVH5075_11AA':
     name: 'Living Room'
+    trv_id: 200
   'GVH5075_22BB':
     name: 'Bathroom'
   'GVH5075_33CC':
